@@ -1,0 +1,6 @@
+@Vloxy.SuperaRewards_HostAddress = http://localhost:5193
+
+GET {{Vloxy.SuperaRewards_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
