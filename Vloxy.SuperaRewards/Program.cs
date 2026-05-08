@@ -23,6 +23,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();         
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 // Configuração da Autenticação JWT (Ensina a API a ler o Token)
 builder.Services.AddAuthentication(options =>

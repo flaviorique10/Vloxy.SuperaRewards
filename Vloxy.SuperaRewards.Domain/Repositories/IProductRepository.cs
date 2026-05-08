@@ -6,5 +6,7 @@ namespace Vloxy.SuperaRewards.Domain.Repositories
     {
         Task<int> AddAsync(Product product);
         Task<IEnumerable<Product>> GetAllAsync();
+        Task<Product?> GetByIdAsync(int id);
+        Task UpdateAsync(Product product);
     }
 }
