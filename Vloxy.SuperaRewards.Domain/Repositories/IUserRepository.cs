@@ -6,5 +6,7 @@ namespace Vloxy.SuperaRewards.Domain.Repositories
     {
         Task<User?> GetByIdAsync(int id);
         Task UpdateAsync(User user);
+        Task<User?> GetByEmailAsync(string email);
+        Task AddAsync(User user);
     }
 }

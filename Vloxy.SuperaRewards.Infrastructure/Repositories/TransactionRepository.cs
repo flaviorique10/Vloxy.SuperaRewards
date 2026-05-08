@@ -1,4 +1,5 @@
-﻿using Vloxy.SuperaRewards.Domain.models;
+﻿using Microsoft.EntityFrameworkCore;
+using Vloxy.SuperaRewards.Domain.models;
 using Vloxy.SuperaRewards.Domain.Repositories;
 using Vloxy.SuperaRewards.Infrastructure.Infrastructure;
 
@@ -17,6 +18,14 @@ namespace Vloxy.SuperaRewards.Infrastructure.Repositories
         {
             _context.Transactions.Add(transaction);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<TransactionHistory>> GetByUserIdAsync(int userId)
+        {
+            return await _context.Transactions
+                .Where(t => t.UserId == userId)
+                .OrderByDescending(t => t.TransactionDate)
+                .ToListAsync();
         }
     }
 }

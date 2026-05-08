@@ -1,35 +1,50 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Vloxy.SuperaRewards.Application.Dtos;
 using Vloxy.SuperaRewards.Application.Services;
 using Vloxy.SuperaRewards.Domain.models;
 
 namespace Vloxy.SuperaRewards.Api.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly ITokenService _tokenService;
+        private readonly IAuthService _authService;
 
-        public AuthController(ITokenService tokenService)
+        // Agora injetamos o AuthService (que tem a inteligência do BCrypt)
+        public AuthController(IAuthService authService)
         {
-            _tokenService = tokenService;
+            _authService = authService;
         }
 
-        [HttpPost("login-teste")]
-        public IActionResult LoginTeste()
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            // Simulando um usuário "Admin" (Poderia ser o seu sogro)
-            var usuarioSimulado = new User
+            var user = new User
             {
-                Id = 1,
-                Name = "Sogro Admin",
-                Email = "admin@supera.com",
-                Role = "Admin",
+                Name = request.Name,
+                Email = request.Email,
+                Role = "Client",
                 TotalPoints = 0
             };
 
-            // Chama a fábrica de tokens
-            var token = _tokenService.GenerateToken(usuarioSimulado);
+            var result = await _authService.RegisterAsync(user, request.Password);
 
-            return Ok(new { MeuToken = token });
+            if (result == "Usuário criado com sucesso!")
+                return Ok(new { message = result });
+
+            return BadRequest(new { message = result });
         }
-    }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            var token = await _authService.LoginAsync(request.Email, request.Password);
+
+            if (token == null)
+                return Unauthorized(new { message = "E-mail ou senha inválidos." });
+
+            return Ok(new { token });
+        }
+    }                
 }
